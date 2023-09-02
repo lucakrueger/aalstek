@@ -1,19 +1,23 @@
 let express = require('express');
 let router = express.Router();
 
-router.get('/', function(req, res, next) {
-  res.render('landing/index', {authenticated: true, username: 'lucakrueger'});
+router.get('/', (req, res, next) => {
+  res.render('landing/index', {authenticated: false, username: 'lucakrueger'});
 })
 
-router.get('/login', function(req, res, next) {
+router.get('/login', (req, res, next) => {
   res.render('landing/login', {title: 'Login'});
 })
 
-router.get('/register', function(req, res, next) {
+router.get('/register', (req, res, next) => {
   res.render('landing/register', {title: 'Register'});
 })
 
-router.get('/reset', function(req, res, next) {
+router.get('/account/:username', (req, res, next) => {
+  res.render('landing/account', {title: req.params.username});
+})
+
+router.get('/reset/:token', (req, res, next) => {
   res.render('landing/reset', {title: 'Reset Password'});
 })
 

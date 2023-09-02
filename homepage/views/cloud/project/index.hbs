@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html style="overflow: hidden">
+    <head>
+        <title>Cloud</title>
+
+        {{> 'head/meta'}}
+        {{> 'head/style'}}
+
+        <script src="js/animation.js"></script>
+    </head>
+    <body class="">
+        <div>
+            {{> 'navigation/reduced/navbar' title="Cloud"}}
+        </div>
+
+        {{#> 'navigation/topnav' title=title baseurl=baseurl titleUrl=baseurl links=topnav}}
+            
+        {{/ 'navigation/topnav'}}
+
+        {{#if overview}}
+            <main class="flex flex-col h-screen justify-center items-center bg-slate-0">
+                <span class="text-md font-medium">Select a Service</span>
+            </main>
+        {{/if}}
+
+        <div class="flex flex-row">
+            {{#if functions}}
+                {{#> 'navigation/sidebar' width="w-1/4"}}
+                    <main class="flex flex-col gap-2 p-4">
+                        <span class="text-xl text-md font-medium">Functions</span>
+                        <ul class="flex flex-col">
+                            {{#each functions}}
+                                <li class="hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                    <a class="text-md font-medium p-2" href="{{../baseurl}}/functions/{{this.name}}">{{this.name}}</a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </main>
+                {{/ 'navigation/sidebar'}}
+            {{/if}}
+
+            {{#if functionData}}
+                {{#> 'navigation/sidebar'}}
+                    <main class="flex flex-col gap-2 p-4">
+                        <span class="text-xl text-md font-medium">{{functionData.name}}</span>
+                        <ul class="flex flex-col gap-4">
+                            <li class="flex flex-col gap-1">
+                            <span class="text-md font-medium">Type</span>
+                            <select class="hover:bg-slate-100 hover:cursor-pointer text-md text-slate-700 pl-4 font-medium outline-none bg-slate-100 h-10 rounded-md" style="-webkit-appearance: none;">
+                                <option class="">Public</option>
+                                <option class="">Private</option>
+                            </select>
+                            </li>
+
+                            <li class="flex flex-col">
+                                <div class="flex flex-col gap-2">
+                                    <span class="text-md font-medium" id="accountInputTitle">Category</span>
+                                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.account.validate()" type="username" id="accountInput" value="{{functionData.category}}"></input>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <span class="mt-4 text-xl text-md font-medium">Actions</span>
+                        <ul class="flex flex-col gap-2">
+
+                            {{#if functionData.actions.stoppable}}
+                                <li class="group hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                    <a class="flex flex-row justify-start items-center group-hover:text-orange-600 text-md font-medium p-2" href="">
+                                        <!--<svg class="group-hover:fill-orange-600" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. <path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"/></svg>-->
+                                        <span class="ml-2">Stop</span>
+                                    </a>
+                                </li>
+                            {{/if}}
+
+                            {{#if functionData.actions.startable}}
+                                <li class="group hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                    <a class="flex flex-row justify-start items-center group-hover:text-green-600 text-md font-medium p-2" href="">
+                                        <!--<svg class="group-hover:fill-green-600" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.<path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>-->
+                                        <span class="ml-2">Start</span>
+                                    </a>
+                                </li>
+                            {{/if}}
+
+                            {{#if functionData.actions.restartable}}
+                                <li class="group hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                    <a class="flex flex-row justify-start items-center group-hover:text-blue-600 text-md font-medium p-2" href="">
+                                        <!--<svg class="group-hover:fill-blue-600" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.<path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg>-->
+                                        <span class="ml-2">Restart</span>
+                                    </a>
+                                </li>
+                            {{/if}}
+
+                            <hr>
+
+                            {{#if functionData.actions.committable}}
+                                <li class="group hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                    <a class="flex flex-row justify-start items-center group-hover:text-blue-600 text-md font-medium p-2" href="">
+                                        <!--<svg class="group-hover:fill-blue-600" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.<path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg>-->
+                                        <span class="ml-2">Commit</span>
+                                    </a>
+                                </li>
+                            {{/if}}
+
+                            <li class="group hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                <a class="flex flex-row justify-start items-center group-hover:text-rose-600 text-md font-medium p-2" href="">
+                                    <!--<svg class="group-hover:fill-rose-600" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.<path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>-->
+                                    <span class="ml-2">Delete</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </main>
+                {{/ 'navigation/sidebar'}}
+
+                <div id="monaco" class="w-full h-[88vh]"></div>
+                <script
+                    src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"
+                    integrity="sha256-0SGl1PJNDyJwcV5T+weg2zpEMrh7xvlwO4oXgvZCeZk="
+                    crossorigin="anonymous"
+                ></script>
+                <script src="/js/editor.js"></script>
+            {{else}}
+                <main class="flex flex-col h-screen justify-center items-center bg-slate-0 w-full">
+                    <span class="text-md font-medium">Select a Function</span>
+                </main>
+            {{/if}}
+        </div>
+
+        {{> 'navigation/reduced/footer'}}
+    </body>
+</html>

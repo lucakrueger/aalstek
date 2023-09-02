@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html style="overflow-y: hidden">
+<html style="overflow: hidden">
     <head>
-        <title>Aalstek</title>
+        <title>Cloud</title>
 
         {{> 'head/meta'}}
         {{> 'head/style'}}
@@ -13,6 +13,8 @@
             {{> 'navigation/navbar'}}
         </div>
 
-        {{> 'landing/content'}}
+        {{> 'cloud/overview/projects' orgs=orgs}}
+
+        {{> 'navigation/reduced/footer'}}
     </body>
 </html>

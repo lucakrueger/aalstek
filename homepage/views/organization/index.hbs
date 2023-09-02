@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html style="overflow: hidden">
+    <head>
+        <title>Aalstek</title>
+
+        {{> 'head/meta'}}
+        {{> 'head/style'}}
+
+        <script src="/js/animation.js"></script>
+    </head>
+    <body class="">
+        <div>
+            {{> 'navigation/navbar'}}
+        </div>
+
+        <div class="flex flex-row">
+            {{#> 'navigation/sidebar'}}
+                <main class="flex flex-col gap-2 p-4">
+                    <span class="text-xl text-md font-medium">Aalstek</span>
+                    <ul class="flex flex-col">
+                        {{#each members}}
+                            <li class="hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                                <a class="text-md font-medium p-2" href="/organization/{{../orgid}}/member/{{this.username}}">{{this.name}}</a>
+                            </li>
+                        {{/each}}
+
+                        <hr class="my-2">
+
+                        <li class="hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                            <a class="text-md font-medium p-2" href="/organization/{{orgid}}/invite">Invite Member</a>
+                        </li>
+
+                        <li class="hover:bg-slate-100 hover:cursor-pointer transition-all rounded-lg w-90 h-10 text-start flex flex-col align-center justify-center">
+                            <a class="text-md font-medium p-2" href="/organization/{{orgid}}/manage">Manage</a>
+                        </li>
+                    </ul>
+                </main>
+            {{/ 'navigation/sidebar'}}
+
+            {{#if manage}}
+                {{> 'organization/manage'}}
+            {{/if}}
+
+            {{#if member}}
+                {{> 'organization/member'}}
+            {{/if}}
+
+            {{#if invite}}
+                {{> 'organization/invite'}}
+            {{/if}}
+        </div>
+    </body>
+</html>
