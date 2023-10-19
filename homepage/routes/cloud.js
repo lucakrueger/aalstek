@@ -1,46 +1,32 @@
-let express = require('express');
-let router = express.Router();
+let express = require('express')
+let router = express.Router()
+let passport = require('passport')
+let model = require('../lib/model')
 
-router.get('/', (req, res, next) => {
-  res.render('cloud/overview/index', {
-    orgs: [
-        {
-            name: 'Luca Krüger',
-            id: 'lucakrueger',
-            projects: [
-                {
-                    name: 'Homepage',
-                    id: 'homepage',
-                    description: 'Personal Homepage'
-                }
-            ]
-        },
-        {
-            name: 'Aalstek',
-            id: 'aalstek',
-            projects: [
-                {
-                    name: 'Homepage',
-                    id: 'homepage',
-                    description: 'Main Homepage'
-                },
-                {
-                    name: 'Cloud API',
-                    id: 'cloud-api',
-                    description: 'Cloud API'
-                }
-            ]
-        }
-    ]
-  });
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+    model.GetUserProjects(req.user.username).then(async projects => {
+        const sorted = await model.GetProjectsByOrganization(projects)
+
+        res.render('cloud/overview/index', {
+            authenticated: true,
+            username: req.user.username,
+            orgs: sorted
+        })
+    })
 })
 
-router.get('/:orgid/new', (req, res, next) => {
-    res.render('cloud/project/new', {})
+router.get('/:orgid/new', passport.authenticate('jwt', { session: false }),(req, res, next) => {
+    res.render('cloud/project/new', {
+        authenticated: true,
+        username: req.user.username,
+        orgid: req.params.orgid
+    })
 })
 
-router.get('/:orgid/:projectid', (req, res, next) => {
+router.get('/:orgid/:projectid', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.render('cloud/project/index', {
+        authenticated: true,
+        username: req.user.username,
         title: 'Aalstek/Website',
         orgid: 'aalstek',
         projectid: 'Website',
@@ -49,26 +35,28 @@ router.get('/:orgid/:projectid', (req, res, next) => {
         topnav: [
             {
                 title: 'Functions',
-                url: '/functions'
+                url: '/functions',
             },
             {
                 title: 'Storage',
-                url: '/storage'
+                url: '/storage',
             },
             {
                 title: 'Hosting',
-                url: '/hosting'
+                url: '/hosting',
             },
             {
                 title: 'Manage',
-                url: '/manage'
-            }
-        ]
-    });
+                url: '/manage',
+            },
+        ],
+    })
 })
 
-router.get('/:orgid/:projectid/functions', (req, res, next) => {
+router.get('/:orgid/:projectid/functions', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.render('cloud/project/index', {
+        authenticated: true,
+        username: req.user.username,
         title: 'Aalstek/Website',
         orgid: 'aalstek',
         projectid: 'Website',
@@ -77,34 +65,36 @@ router.get('/:orgid/:projectid/functions', (req, res, next) => {
         topnav: [
             {
                 title: 'Functions',
-                url: '/functions'
+                url: '/functions',
             },
             {
                 title: 'Storage',
-                url: '/storage'
+                url: '/storage',
             },
             {
                 title: 'Hosting',
-                url: '/hosting'
+                url: '/hosting',
             },
             {
                 title: 'Manage',
-                url: '/manage'
-            }
+                url: '/manage',
+            },
         ],
         functions: [
             {
-                name: 'GetUser'
+                name: 'GetUser',
             },
             {
-                name: 'NewUser'
-            }
-        ]
-    });
+                name: 'NewUser',
+            },
+        ],
+    })
 })
 
-router.get('/:orgid/:projectid/functions/:functionid', (req, res, next) => {
+router.get('/:orgid/:projectid/functions/:functionid', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     res.render('cloud/project/index', {
+        authenticated: true,
+        username: req.user.username,
         title: 'Aalstek/Website',
         orgid: 'aalstek',
         projectid: 'Website',
@@ -113,20 +103,20 @@ router.get('/:orgid/:projectid/functions/:functionid', (req, res, next) => {
         topnav: [
             {
                 title: 'Functions',
-                url: '/functions'
+                url: '/functions',
             },
             {
                 title: 'Storage',
-                url: '/storage'
+                url: '/storage',
             },
             {
                 title: 'Hosting',
-                url: '/hosting'
+                url: '/hosting',
             },
             {
                 title: 'Manage',
-                url: '/manage'
-            }
+                url: '/manage',
+            },
         ],
         functionData: {
             name: req.params.functionid,
@@ -138,17 +128,17 @@ router.get('/:orgid/:projectid/functions/:functionid', (req, res, next) => {
                 restartable: true,
                 stoppable: true,
                 committable: true,
-            }
+            },
         },
         functions: [
             {
-                name: 'GetUser'
+                name: 'GetUser',
             },
             {
-                name: 'NewUser'
-            }
-        ]
-    });
+                name: 'NewUser',
+            },
+        ],
+    })
 })
 
-module.exports = router;
+module.exports = router

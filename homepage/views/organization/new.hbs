@@ -37,24 +37,12 @@
         {{> 'navigation/reduced/footer'}}
     </body>
 
+    <script src="/js/forms.js"></script>
+
     <script>
         let identificationInput = document.getElementById('identificationInput')
 
-        let Form = loadForm({
-            name: {
-                text: 'Organization Name',
-                rules: [
-                    {
-                        rule: '(?=.{1,})',
-                        reason: 'Field cannot be empty'
-                    },
-                    {
-                        rule: '(^[A-Za-z0-9 ]*$)',
-                        reason: 'Only use Letters and Numbers'
-                    }
-                ]
-            }
-        })
+        let Form = loadForm(orgNewForm)
 
         const formatID = (str) => {
             let value = `${str}`
@@ -73,7 +61,7 @@
         }
 
         const updateID = () => {
-            let formatted = formatID(`${Form.name.input.value}`)
+            let formatted = idFromString(`${Form.name.input.value}`)
 
             identificationInput.value = formatted
         }
@@ -81,13 +69,31 @@
         const submitForm = () => {
             if(Form.validate() == false) return
 
-            fetch('localhost:8000/api/login').then(response => response.text())
+            fetch('http://localhost:3000/api/organization/new', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: Form.jsonString()
+            }).then(response => response.text())
             .then((text) => {
-                let response = JSON.parse(text)
-                console.log(response)
-                if(response.status == 200) {
-                    location.href = 'localhost:800'
+                let res = JSON.parse(text)
+
+                if(res.created == true) {
+                    window.location = 'http://localhost:3000/cloud'
+                    return
                 }
+
+                if(res.reason != undefined) {
+                    Form.name.reject(res.reason)
+                    return
+                }
+
+                console.log(res)
+
+                Form.validate(res.fields)
+
             })
         }
     </script>

@@ -1,0 +1,14 @@
+services:
+  centraldb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aalstek
+      MYSQL_USER: aalstek
+      MYSQL_PASSWORD: password
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+volumes:
+  data:

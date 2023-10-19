@@ -24,12 +24,12 @@
 
                 <div class="flex flex-col gap-2 w-2/3">
                     <span class="text-sm text-slate-500 font-medium" id="emailInputTitle">Email</span>
-                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.email.validate()" type="email" id="emailInput"></input>
+                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.email.validate()" onblur="checkAccountAvailable()" type="email" id="emailInput"></input>
                 </div>
 
                 <div class="flex flex-col gap-2 w-2/3">
                     <span class="text-sm text-slate-500 font-medium" id="usernameInputTitle">Username</span>
-                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.username.validate()" type="username" id="usernameInput"></input>
+                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.username.validate()" onblur="checkAccountAvailable()" type="username" id="usernameInput"></input>
                 </div>
 
                 <div class="flex flex-col gap-2 w-2/3">
@@ -52,94 +52,62 @@
 
         {{> 'navigation/reduced/footer'}}
 
+        <script src="js/forms.js"></script>
+
         <script>
-            let Form = loadForm({
-                name: {
-                    text: 'Full Name',
-                    rules: [
-                        {
-                            rule: '(?=.{1,})',
-                            reason: 'Field cannot be empty'
-                        },
-                    ]
-                },
-                email: {
-                    text: 'Email',
-                    rules: [
-                        {
-                            rule: '(?=.{1,})',
-                            reason: 'Field cannot be empty'
-                        },
-                    ]
-                },
-                username: {
-                    text: 'Username',
-                    rules: [
-                        {
-                            rule: '(?=.{4,})',
-                            reason: 'Needs at least 4 Characters'
-                        },
-                        {
-                            rule: '(^[A-Za-z0-9]*$)',
-                            reason: 'Only use Letters and Numbers'
-                        }
-                    ]
-                },
-                password: {
-                    text: 'Password',
-                    rules: [
-                        {
-                            rule: '(?=.{8,})',
-                            reason: 'Needs at least 8 Characters'
-                        },
-                        {
-                            rule: '(?=.*[A-Z])',
-                            reason: 'Needs at least 1 Uppercase Letter'
-                        },
-                        {
-                            rule: '(?=.*[a-z])',
-                            reason: 'Needs at least 1 Lowercase Letter'
-                        },
-                        {
-                            rule: '(?=.*[0-9])',
-                            reason: 'Needs at least 1 Digit'
-                        },
-                        {
-                            rule: '([^A-Za-z0-9])',
-                            reason: 'Needs at leat 1 Special Character'
-                        }
-                    ]
-                },
-                confirmPassword: {
-                    text: 'Confirm Password',
-                    rules: [
-                        {
-                            rule: '(?=.{1,})',
-                            reason: 'Field cannot be empty'
-                        },
-                        {
-                            rule: (value) => {
-                                return Form.password.input.value == value
-                            },
-                            reason: 'Passwords need to match'
-                        }
-                    ]
-                }
-            })
+            let Form = loadForm(registerForm)
+
+            const checkAccountAvailable = () => {
+                fetch('http://localhost:3000/api/account/exists', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: Form.username.value(),
+                        email: Form.email.value()
+                    })
+                }).then(response => response.text())
+                .then(text => {
+                    let res = JSON.parse(text)
+
+                    if(res.exists == false) return
+
+                    Form.email.validateResponse({
+                        failed: true,
+                        reason: 'Account already exists'
+                    })
+
+                    Form.username.validateResponse({
+                        failed: true,
+                        reason: 'Account already exists'
+                    })
+                })
+            }
 
             const submitForm = () => {
-                console.log(Form.validate())
                 if(Form.validate() == false) return
-                console.log('test')
 
-                fetch('localhost:3000/api/login').then(response => response.text())
-                    .then((text) => {
-                        let response = JSON.parse(text)
-                        console.log(response)
-                        if(response.status == 200) {
-                            location.href = 'localhost:3000'
-                        }
-                    })
+                fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: Form.jsonString()
+                }).then(response => response.text())
+                .then(text => {
+                    let res = JSON.parse(text)
+
+                    console.log(res)
+                    if(res.created == true) {
+                        window.location.href = 'http://localhost:3000'
+                        return
+                    }
+
+                    Form.validateResponse(res.fields)
+                })
             }
         </script>
     </body>

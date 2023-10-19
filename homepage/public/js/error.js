@@ -6,8 +6,8 @@ module.exports.lib = {
         help: 'Try again. If the problem persists, open a support ticket.',
         link: {
             text: 'Open a ticket?',
-            url: '/ticket'
-        }
+            url: '/ticket',
+        },
     },
     401: {
         status: 401,
@@ -16,20 +16,20 @@ module.exports.lib = {
         help: 'Login to get access.',
         link: {
             text: 'Do you need to login?',
-            url: '/login'
-        }
+            url: '/login',
+        },
     },
     403: {
         status: 403,
         title: 'Forbidden',
         message: 'You dont have permission to access this page.',
-        help: 'Contact the responsibles to get access.'
+        help: 'Contact the responsibles to get access.',
     },
     404: {
         status: 404,
         title: 'Not Found',
         message: 'We couldnt find what you are looking for.',
-        help: 'It may have been deleted. Contact the responsibles to find out more.'
+        help: 'It may have been deleted. Contact the responsibles to find out more.',
     },
     500: {
         status: 500,
@@ -38,8 +38,8 @@ module.exports.lib = {
         help: 'Try again. If the problem persists, open a support ticket.',
         link: {
             text: 'Open a ticket?',
-            url: '/ticket'
-        }
+            url: '/ticket',
+        },
     },
     502: {
         status: 502,
@@ -48,8 +48,8 @@ module.exports.lib = {
         help: 'Try again. If the problem persists, open a support ticket.',
         link: {
             text: 'Open a ticket?',
-            url: '/ticket'
-        }
+            url: '/ticket',
+        },
     },
     503: {
         status: 503,
@@ -58,15 +58,15 @@ module.exports.lib = {
         help: 'It may be a routine maintenance.',
         link: {
             text: 'Check current status?',
-            url: '/status'
-        }
+            url: '/status',
+        },
     },
 }
 
 module.exports.getError = (status) => {
     let res = module.exports.lib[status]
 
-    if(res == undefined || res == null) res = module.exports.lib[500]
+    if (res == undefined || res == null) res = module.exports.lib[500]
 
     return res
 }

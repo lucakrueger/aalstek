@@ -63,13 +63,26 @@
         const submitForm = () => {
             if(Form.validate() == false) return
 
-            fetch('localhost:8000/api/login').then(response => response.text())
+            fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: Form.jsonString()
+            }).then(response => response.text())
             .then((text) => {
-                let response = JSON.parse(text)
-                console.log(response)
-                if(response.status == 200) {
-                    location.href = 'localhost:800'
+                let res = JSON.parse(text)
+                console.log(res)
+
+                if(res.logged == true) {
+                    window.location = 'http://localhost:3000'
+                    return
                 }
+
+                Form.account.validateResponse(res.account)
+                Form.password.validateResponse(res.password)
+
             })
         }
     </script>

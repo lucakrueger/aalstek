@@ -13,5 +13,5 @@ module.exports = {
     AccountCreated: 1100,
     AccountDeleted: 1101,
     AccountExists: 1102,
-    AccountNotExisting: 1103
+    AccountNotExisting: 1103,
 }

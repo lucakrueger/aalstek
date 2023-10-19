@@ -1,0 +1,21 @@
+services:
+  homepage:
+    build: ./homepage
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/:/etc/nginx/
+    ports:
+      - 80:80
+      - 443:443
+  centraldb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: aalstek
+      MYSQL_USER: aalstek
+      MYSQL_PASSWORD: password
+    volumes:
+      - data:/var/lib/mysql
+volumes:
+  data:
