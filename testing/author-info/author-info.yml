@@ -1,0 +1,19 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm Up Phase
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 10
+      name: Ramp Up Load
+    - duration: 30
+      arrivalRate: 10
+      rampTo: 30
+      name: Spike Phase
+scenarios:
+  - flow:
+      - get:
+          url: "/actions/info/author/Aalstek"
