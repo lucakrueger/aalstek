@@ -1,7 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"nightjet.aalstek.com/m/v2/dispach"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	service := gin.Default()
+
+	dispach.AddDispachRouter(&service.RouterGroup)
+
+	http.ListenAndServe(":3001", service)
+	service.Run()
 }
