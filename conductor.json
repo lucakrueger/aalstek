@@ -1,0 +1,14 @@
+{
+    "compile-function-library": {
+        "description": "Compiles Functions Library",
+        "scripts": [
+            "npm run test --prefix ../functions-library"
+        ]
+    },
+    "prepare-lib": {
+        "description": "Prepares Function Library and Copies it",
+        "scripts": [
+            "node ../integration/prepare-lib.js"
+        ]
+    }
+}

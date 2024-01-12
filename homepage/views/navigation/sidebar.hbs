@@ -1,0 +1,9 @@
+{{#if width}}
+    <div class="{{width}} overflow-auto h-screen border-r flex flex-col gap-4">
+        {{> @partial-block}}
+    </div>
+{{else}}
+    <div class="w-1/3 overflow-auto h-screen border-r flex flex-col gap-4">
+        {{> @partial-block}}
+    </div>
+{{/if}}

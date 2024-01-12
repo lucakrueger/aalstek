@@ -1,0 +1,15 @@
+{
+  "name": "aalstek",
+  "version": "1.0.0",
+  "description": "This is the Repository for all main projects.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "conductor": "npm start --prefix ./conductor ../conductor.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

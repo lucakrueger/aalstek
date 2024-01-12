@@ -1,0 +1,12 @@
+services:
+  homepage:
+    build: ./homepage
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/:/etc/nginx/
+    ports:
+      - 80:80
+      - 443:443
+volumes:
+  data:

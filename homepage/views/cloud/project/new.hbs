@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html style="overflow: hidden">
+    <head>
+        <title>Cloud</title>
+
+        {{> 'head/meta'}}
+        {{> 'head/style'}}
+
+        <script src="/js/animation.js"></script>
+        <script src="/js/form.js"></script>
+    </head>
+    <body class="">
+        <div>
+            {{> 'navigation/reduced/navbar' title='New Project'}}
+        </div>
+
+        <main class="flex flex-col h-screen justify-start items-center">
+            <div class="flex flex-col p-4 pb-6 justify-center items-center gap-4 w-5/6 sm:w-3/5 md:w-2/5 border-slate-200 rounded-md bg-white">
+                <span class="p-4 text-xl font-semibold transition-all duration-300 text-black hover:text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-600">New Project</span>
+                
+                <div class="flex flex-col gap-2 w-2/3">
+                    <span class="text-sm text-slate-500 font-medium" id="organizationInputTitle">Organization</span>
+                    <input class="text-md text-slate-500 p-4 font-medium outline-none bg-slate-100 h-10 rounded-md" onkeyup="" type="name" id="organizationInput" disabled value="{{orgid}}"></input>
+                </div>
+
+                <div class="flex flex-col gap-2 w-2/3">
+                    <span class="text-sm text-slate-500 font-medium" id="nameInputTitle">Project Name</span>
+                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.name.validate(); updateID()" type="name" id="nameInput"></input>
+                </div>
+
+                <div class="flex flex-col gap-2 w-2/3">
+                    <span class="text-sm text-slate-500 font-medium" id="identificationInputTitle">Identification</span>
+                    <input class="text-md text-slate-500 p-4 font-medium outline-none bg-slate-100 h-10 rounded-md" onkeyup="" type="name" id="identificationInput" disabled value=""></input>
+                </div>
+
+                <div class="flex flex-col gap-2 w-2/3">
+                    <span class="text-sm text-slate-500 font-medium" id="descriptionInputTitle">Description</span>
+                    <input class="text-md text-slate-800 font-medium p-4 outline-none bg-slate-100 h-10 rounded-md" onkeyup="Form.description.validate()" type="name" id="descriptionInput"></input>
+                </div>
+
+                <div class="flex flex-col justify-center items-center gap-2 w-2/3">
+                    <a class="hover:cursor-pointer hover:bg-slate-800 transition-all duration-300 font-medium text-md text-slate-100 p-2 outline-none bg-slate-700 h-10 rounded-md w-full text-center" onclick="submitForm()">Create</a>
+                </div>
+            </div>
+        </main>
+
+        {{> 'navigation/reduced/footer'}}
+    </body>
+
+    <script src="/js/forms.js"></script>
+
+    <script>
+        let identificationInput = document.getElementById('identificationInput')
+
+        let Form = loadForm(projectNewForm)
+
+        const formatID = (str) => {
+            let value = `${str}`
+            let bounds = {
+                start: 0,
+                end: value.length
+            }
+            if(value[0] == ' ') bounds.start = 1
+            if(value[value.length - 1] == ' ') bounds.end = value.length - 1
+
+            value = value.slice(bounds.start, bounds.end)
+
+            value = value.replace(' ', '-')
+
+            return value.toLowerCase()
+        }
+
+        const updateID = () => {
+            let formatted = idFromString(`${Form.name.input.value}`)
+
+            identificationInput.value = formatted
+        }
+
+        const submitForm = () => {
+            if(Form.validate() == false) return
+
+            fetch('http://localhost:3000/api/project/new', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: Form.jsonString()
+            }).then(response => response.text())
+            .then((text) => {
+                let res = JSON.parse(text)
+
+                if(res.created == true) {
+                    window.location = 'http://localhost:3000/cloud'
+                    return
+                }
+
+                if(res.reason != undefined) {
+                    Form.name.reject(res.reason)
+                    return
+                }
+
+                console.log(res)
+
+                Form.validate(res.fields)
+
+            })
+        }
+    </script>
+</html>

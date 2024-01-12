@@ -1,0 +1,15 @@
+<header class="flex flex-row justify-start content-center w-100 gap-4 h-12 p-4 mr-auto">
+    <div class="flex flex-col justify-center content-center">
+        <a class="text-xl font-bold transition-all duration-300 text-black hover:text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-purple-600" href="/">Aalstek</a>
+    </div>
+
+    {{#if title}}
+        <div class="flex flex-col justify-center content-center">
+            <a class="text-xl">|</a>
+        </div>
+
+        <div class="flex flex-col justify-center content-center">
+            <a class="text-xl">{{title}}</a>
+        </div>
+    {{/if}}
+<header>

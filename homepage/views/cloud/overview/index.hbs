@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html style="overflow: hidden">
+    <head>
+        <title>Cloud</title>
+
+        {{> 'head/meta'}}
+        {{> 'head/style'}}
+
+        <script src="js/animation.js"></script>
+    </head>
+    <body class="">
+        <div>
+            {{> 'navigation/navbar'}}
+        </div>
+
+        {{> 'cloud/overview/projects' orgs=orgs}}
+
+        {{> 'navigation/reduced/footer'}}
+    </body>
+</html>
