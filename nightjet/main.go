@@ -10,8 +10,9 @@ import (
 func main() {
 	service := gin.Default()
 
-	dispatch.PrecompileRuntime()
+	dispatch.BuildCache()
 
+	dispatch.PrecompileRuntime()
 	dispatch.AddDispatchRouter(&service.RouterGroup)
 
 	http.ListenAndServe(":3001", service)

@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"strings"
 
+	"github.com/chenyahui/gin-cache/persist"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,7 +39,7 @@ func actionByIdentifier(context *gin.Context) {
 		return
 	}
 
-	actionSource, actionName, paused, err := GetActionIdentifier(request.Identifier)
+	actionSource, actionName, paused, cacheable, err := GetActionIdentifier(request.Identifier)
 
 	if err != nil {
 		context.JSON(500, gin.H{"failed": err.Error()})
@@ -55,6 +57,21 @@ func actionByIdentifier(context *gin.Context) {
 		return
 	}
 
+	if cacheable {
+		hash := HashRequest(strings.Join([]string{"/", request.Identifier}, ""), string(params))
+
+		var cachedRequest CachedRequest
+		err := GetCacheValue(hash, &cachedRequest)
+
+		if err != nil && err != persist.ErrCacheMiss {
+			context.JSON(500, gin.H{"failed": err.Error()})
+			return
+		} else if err == nil {
+			context.JSON(200, cachedRequest.Response)
+			return
+		}
+	}
+
 	var requestBody map[string]interface{}
 	json.Unmarshal(params, &requestBody)
 
@@ -66,6 +83,13 @@ func actionByIdentifier(context *gin.Context) {
 
 	var result map[string]interface{}
 	json.Unmarshal(resultData, &result)
+
+	if cacheable {
+		hash := HashRequest(strings.Join([]string{"/", request.Identifier}, ""), string(params))
+
+		CacheValue(hash, CachedRequest{result})
+	}
+
 	context.JSON(200, result)
 }
 

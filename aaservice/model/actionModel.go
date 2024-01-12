@@ -90,7 +90,7 @@ func UpdateActionField(identifier string, key string, value interface{}) error {
 	return nil
 }
 
-func UpdateAction(identifier string, author string, created string, name string, description string, paused bool, source string) (string, error) {
+func UpdateAction(identifier string, author string, created string, name string, description string, paused bool, cacheable bool, source string) (string, error) {
 	filter := bson.M{"name": name}
 
 	updatedDocument := bson.M{
@@ -101,6 +101,7 @@ func UpdateAction(identifier string, author string, created string, name string,
 			"name":        name,
 			"description": description,
 			"paused":      paused,
+			"cacheable":   cacheable,
 			"source":      source,
 		},
 	}
@@ -121,7 +122,7 @@ func UpdateAction(identifier string, author string, created string, name string,
 
 }
 
-func StoreAction(author string, created string, name string, description string, paused bool, source string) (string, error) {
+func StoreAction(author string, created string, name string, description string, paused bool, cacheable bool, source string) (string, error) {
 	filter := bson.M{"name": name}
 
 	var result bson.M
@@ -136,11 +137,11 @@ func StoreAction(author string, created string, name string, description string,
 		rawIdentifier := uuid.New().String()
 		identifier := strings.ReplaceAll(rawIdentifier, "-", "") // Clean up uuid
 
-		return UpdateAction(identifier, author, created, name, description, paused, source)
+		return UpdateAction(identifier, author, created, name, description, paused, cacheable, source)
 
 	}
 
-	return UpdateAction(result["identifier"].(string), author, created, name, description, paused, source)
+	return UpdateAction(result["identifier"].(string), author, created, name, description, paused, cacheable, source)
 
 }
 

@@ -31,6 +31,7 @@ type actionInfoBody struct {
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description" binding:"required"`
 	Paused      bool   `json:"paused"`
+	Cacheable   bool   `json:"cacheable"`
 	Source      string `json:"source"`
 }
 
@@ -92,7 +93,7 @@ func store(context *gin.Context) {
 		return
 	}
 
-	identifier, err := model.StoreAction(request.Author, request.Created, request.Name, request.Description, request.Paused, request.Source)
+	identifier, err := model.StoreAction(request.Author, request.Created, request.Name, request.Description, request.Paused, request.Cacheable, request.Source)
 
 	if err != nil {
 		context.JSON(500, gin.H{"failed": err.Error()})

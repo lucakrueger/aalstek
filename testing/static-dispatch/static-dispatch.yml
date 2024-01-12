@@ -3,19 +3,21 @@ config:
   phases:
     - duration: 60
       arrivalRate: 1
-      rampTo: 5
+      rampTo: 150
       name: Warm Up Phase
     - duration: 60
-      arrivalRate: 5
-      rampTo: 10
+      arrivalRate: 150
+      rampTo: 300
       name: Ramp Up Load
     - duration: 30
-      arrivalRate: 10
-      rampTo: 100
+      arrivalRate: 300
+      rampTo: 500
       name: Spike Phase
 scenarios:
   - flow:
       - post:
-          url: "/dispatch/test"
+          url: "/dispatch/5fb442122a2c46e88dbc5a8c599f449c"
           json:
-            hello: "world"
+            username: "lucakrueger"
+            email: "lucakrueger@outlook.com"
+            password: "123456789ABCDEF"

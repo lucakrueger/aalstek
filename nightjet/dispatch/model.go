@@ -10,17 +10,30 @@ import (
 
 const api = "http://localhost:3000"
 
-func GetActionIdentifier(identifier string) (string, string, bool, error) {
+func GetActionIdentifier(identifier string) (string, string, bool, bool, error) {
+	var cachedAction CachedAction
+	if err := GetCacheValue(identifier, &cachedAction); err == nil {
+		return cachedAction.Source, cachedAction.Name, cachedAction.Paused, cachedAction.Cacheable, nil
+	}
+
 	response, err := GetRequest(strings.Join([]string{api, "/actions/info/action/", identifier}, ""))
 	if err != nil {
-		return "", "", false, err
+		return "", "", false, false, err
 	}
 
 	if failed, exists := response["failed"]; exists {
-		return "", "", false, errors.New(failed.(string))
+		return "", "", false, false, errors.New(failed.(string))
 	}
 
-	return response["source"].(string), response["name"].(string), response["paused"].(bool), nil
+	cachedAction = CachedAction{
+		response["source"].(string),
+		response["name"].(string),
+		response["paused"].(bool),
+		response["cacheable"].(bool),
+	}
+	CacheValue(identifier, cachedAction)
+
+	return response["source"].(string), response["name"].(string), response["paused"].(bool), response["cacheable"].(bool), nil
 }
 
 func GetRequest(address string) (map[string]interface{}, error) {
