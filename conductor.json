@@ -2,7 +2,7 @@
     "compile-function-library": {
         "description": "Compiles Functions Library",
         "scripts": [
-            "npm run test --prefix ../aalstek-functions-library"
+            "npm run test --prefix ../functions-library"
         ]
     },
     "prepare-lib": {
